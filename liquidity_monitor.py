@@ -169,7 +169,7 @@ def build_dashboard(x_data, y_margin, y_breadth):
         .set_global_opts(
             title_opts=opts.TitleOpts(
                 title="市场流动性监控面板",
-                subtitle="杠杆资金活跃度与市场广度分析",
+                pos_left="center",  pos_top="1%"
             ),
             tooltip_opts=opts.TooltipOpts(trigger="axis", axis_pointer_type="cross"),
             legend_opts=opts.LegendOpts(pos_top="5%"),
