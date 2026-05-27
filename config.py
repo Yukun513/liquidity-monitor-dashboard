@@ -15,8 +15,10 @@ def load_environment():
 load_environment()
 
 # 获取环境变量（统一访问点）
+SQL_USER = os.getenv('SQL_USER')
 SQL_PASSWORDS = os.getenv('SQL_PASSWORDS')
 SQL_HOST = os.getenv('SQL_HOST')
+SQL_PORT = os.getenv('SQL_PORT')
 HUOFUNIU_TOKEN = os.getenv('HUOFUNIU_TOKEN')
 APPID = os.getenv('APPID')
 APPKEY = os.getenv('APPKEY')

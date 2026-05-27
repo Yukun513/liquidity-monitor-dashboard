@@ -10,15 +10,17 @@
   避免大市值股票主导：先算个股比率，再做截面平均。
 """
 
+import urllib.parse
 import pandas as pd
 from sqlalchemy import create_engine
 from pyecharts import options as opts
 from pyecharts.charts import Line
+from config import SQL_USER, SQL_PASSWORDS, SQL_HOST, SQL_PORT
 
 # ==========================================
 # 配置
 # ==========================================
-DB_URI = "mysql+pymysql://readonly:REDACTED_PWD@REDACTED_HOST:3306/intern"
+DB_URI = f"mysql+pymysql://{SQL_USER}:{urllib.parse.quote_plus(SQL_PASSWORDS)}@{SQL_HOST}:{SQL_PORT}/intern"
 STOCK_CODES = ("000858", "300476", "600519", "601991", "688017")
 INDEX_CODE = "000300.SH"
 START_DATE = "2020-01-01"
