@@ -85,27 +85,21 @@ def load_index_data(engine, index_code, start_date, end_date):
 # 2. 指标计算
 # ==========================================
 def calculate_margin_strength(df_stocks):
-    """计算杠杆资金参与度 (margin_strength)。
-
-    步骤：
-      1. 个股层面：margin_strength_i = rzmre_i / amt_i
-      2. 截面平均：mean(margin_strength) by date
-      3. 使用前一日融资结构预测当日市场广度：shift(1)
-
-    采用截面平均而非总量比，避免大市值股票主导指标。
-
-    Returns:
-        DataFrame with columns: date, margin_strength_shifted
-    """
-    # 个股比率
+    # 全市场加总再除（总融资余额 / 总成交额）
     df = df_stocks.copy()
-    df["margin_strength"] = df["rzmre"] / df["amt"]
+    # 过滤掉 rzmre 全为 NaN 的日期
+    df = df.dropna(subset=["rzmre"])
 
-    # 截面均值（等权，避免大市值主导）
-    df_daily = df.groupby("date")["margin_strength"].mean().reset_index()
-    df_daily.rename(columns={"margin_strength": "margin_strength_raw"}, inplace=True)
+# 按日期分组，加总融资余额和成交额
+    df_daily = df.groupby("date").agg({
+    "rzmre": "sum",   # 全市场融资余额总和
+    "amt": "sum"      # 全市场成交额总和
+    }).reset_index()
 
-    # 使用前一日融资结构预测当日市场广度
+# 计算加总比率
+    df_daily["margin_strength_raw"] = df_daily["rzmre"] / df_daily["amt"]
+
+# 使用前一日融资结构预测当日市场广度
     df_daily["margin_strength_shifted"] = df_daily["margin_strength_raw"].shift(1)
 
     return df_daily[["date", "margin_strength_shifted"]]

@@ -205,6 +205,7 @@ def main():
     # ---- 各数据源独立 upsert，互不踩踏 ----
     def clean_df(df: pd.DataFrame) -> pd.DataFrame:
         """清洗 DataFrame:去重列、过滤非交易日、NaN→None"""
+        df = df.copy()
         df = df.loc[:, ~df.columns.duplicated()]
         df["date"] = pd.to_datetime(df["date"]).dt.date
         df = df[df["date"].apply(lambda d: is_trading(d, holidays))]
